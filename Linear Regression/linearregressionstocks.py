@@ -8,15 +8,12 @@ from matplotlib import style
 import datetime
 import csv
 
-
+style.use('ggplot')
 
 stock = 'EIA/PET_RWTC_D'
-style.use('ggplot')
-Quandl.ApiConfig.api_key = "CzD8D1mR6eebi9sNnqpc"
+quandlApi_key = "CzD8D1mR6eebi9sNnqpc"
 
-CSV_URL = "https://www.quandl.com/api/v3/datasets/EIA/PET_RWTC_D.csv?CzD8D1mR6eebi9sNnqpc"
-
-
+CSV_URL = ("https://www.quandl.com/api/v3/datasets/%s.csv"% (stock)) + "?" + quandlApi_key  
 rawData = pd.read_csv(CSV_URL, quoting=csv.QUOTE_NONE, error_bad_lines=False, parse_dates=True, index_col=[0])
           
 df = rawData
@@ -40,7 +37,7 @@ df.sort_index(inplace=True)
 
 y = np.array(df['label'])
 
-X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.7)
+X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
 clf = LinearRegression(n_jobs=-1)
 clf.fit(X_train, y_train)
 confidence = clf.score(X_test, y_test)
